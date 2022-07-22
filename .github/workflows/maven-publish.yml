@@ -20,5 +20,6 @@ jobs:
 
     - name: Publish to GitHub Packages Apache Maven
       run: mvn --batch-mode -DuseGitHubPackages=true deploy -s $GITHUB_WORKSPACE/settings.xml
+      working-directory: ./saga-advanced-spring-boot-starter
       env:
         GITHUB_TOKEN: ${{ secrets.PACKAGES_GITHUB_TOKEN }}

@@ -1,4 +1,4 @@
-package com.forguta.libs.saga.core.util;
+package com.forguta.libs.saga.core.config;
 
 import com.forguta.libs.saga.core.model.constant.Constant;
 import lombok.AllArgsConstructor;

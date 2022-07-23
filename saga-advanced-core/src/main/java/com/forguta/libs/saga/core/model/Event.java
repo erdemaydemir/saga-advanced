@@ -1,6 +1,6 @@
 package com.forguta.libs.saga.core.model;
 
-import com.forguta.libs.saga.core.util.ApplicationProperties;
+import com.forguta.libs.saga.core.config.ApplicationProperties;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;

@@ -1,8 +1,10 @@
 package com.forguta.libs.saga.auto;
 
-import com.forguta.libs.saga.core.process.EventProcessorExecutor;
+import com.forguta.libs.saga.core.config.EventProcessorContextConfig;
+import com.forguta.libs.saga.core.config.properties.SagaAdvancedproperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -14,7 +16,8 @@ import java.util.concurrent.Executor;
 @RequiredArgsConstructor
 @ComponentScan(basePackages = "com.forguta.libs.saga")
 @Configuration
-public class SagaAdvancedConfiguration {
+@EnableConfigurationProperties
+public class SagaAdvancedConfigurer {
 
     private final ApplicationContext applicationContext;
 
@@ -31,8 +34,12 @@ public class SagaAdvancedConfiguration {
     }
 
     @Bean
-    public EventProcessorExecutor eventProcessorExecutor() {
-        return new EventProcessorExecutor(applicationContext);
+    public SagaAdvancedproperties sagaAdvancedConfig() {
+        return new SagaAdvancedproperties();
     }
 
+    @Bean
+    public EventProcessorContextConfig eventProcessorContextConfig() {
+        return new EventProcessorContextConfig(applicationContext);
+    }
 }

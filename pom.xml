@@ -69,7 +69,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/forguta/saga-advanced-spring-boot-starter</url>
+            <url>https://maven.pkg.github.com/forguta/saga-advanced</url>
         </repository>
     </distributionManagement>
 </project>

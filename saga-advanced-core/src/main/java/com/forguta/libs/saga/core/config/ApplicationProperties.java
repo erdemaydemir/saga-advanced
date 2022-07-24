@@ -4,14 +4,14 @@ import com.forguta.libs.saga.core.model.constant.Constant;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-@Component
 @Slf4j
 @AllArgsConstructor
+@Configuration
 public class ApplicationProperties {
 
     private final ApplicationContext applicationContext;

@@ -1,4 +1,4 @@
-package com.forguta.libs.saga.core.config.rabbit.constant;
+package com.forguta.libs.saga.core.broker.rabbit.constant;
 
 public class RabbitConstant {
     public static final String SAGA_EXCHANGE = "SAGA-EXCHANGE";

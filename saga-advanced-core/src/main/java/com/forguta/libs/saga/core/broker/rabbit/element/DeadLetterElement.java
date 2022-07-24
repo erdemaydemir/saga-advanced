@@ -1,24 +1,17 @@
-package com.forguta.libs.saga.core.config.rabbit.properties;
+package com.forguta.libs.saga.core.broker.rabbit.element;
 
-import com.forguta.libs.saga.core.config.AbstractConfig;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import static com.forguta.libs.saga.core.config.rabbit.constant.RabbitConstant.DEFAULT_DEAD_LETTER_QUEUE_POSTFIX;
+import static com.forguta.libs.saga.core.broker.rabbit.constant.RabbitConstant.DEFAULT_DEAD_LETTER_QUEUE_POSTFIX;
 
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
-@EqualsAndHashCode(callSuper = false)
 @Slf4j
-@ConfigurationProperties
-public class DeadLetterProperties extends AbstractConfig {
+public class DeadLetterElement implements RabbitElement {
 
-    @NestedConfigurationProperty
-    private ExchangeProperties deadLetterExchange;
+    private ExchangeElement deadLetterExchange;
 
     @Builder.Default
     private String queuePostfix = DEFAULT_DEAD_LETTER_QUEUE_POSTFIX;

@@ -5,15 +5,3 @@ spring:
 saga:
   auto-config:
     enabled: true
-    rabbit:
-      default-exchange:
-        durable: false
-        auto-delete: true
-      default-queue:
-        durable: false
-        auto-delete: true
-        dead-letter-enabled: true
-      default-dead-letter:
-        dead-letter-exchange:
-          auto-delete: true
-          durable: false

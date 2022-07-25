@@ -8,13 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -38,9 +35,7 @@ public class EventProcessorContextConfig {
     }
 
     private void loadProcessorMap() {
-        final Map<String, Object> beansWithComponentAnnotation = applicationContext.getBeansWithAnnotation(Component.class);
-        final Map<String, Object> beansWithServiceAnnotation = applicationContext.getBeansWithAnnotation(Service.class);
-        final Map<String, Object> beans = Stream.concat(beansWithComponentAnnotation.entrySet().stream(), beansWithServiceAnnotation.entrySet().stream()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        final Map<String, Object> beans = applicationContext.getBeansWithAnnotation(Component.class);
         if (beans.size() > 0) {
             beans.forEach((s, o) -> {
                 Class<?> klass = o.getClass();

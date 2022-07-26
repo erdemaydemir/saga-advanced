@@ -34,7 +34,7 @@ public class SagaAdvancedConfigurer {
     }
 
     @Bean
-    public SagaMessageBrokerConfiguration sagaMessageBrokerConfiguration(){
+    public SagaMessageBrokerConfiguration sagaMessageBrokerConfiguration() {
         return new RabbitConfiguration(rabbitTemplate);
     }
 

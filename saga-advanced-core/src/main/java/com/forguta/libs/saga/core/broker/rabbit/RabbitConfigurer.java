@@ -66,21 +66,21 @@ public class RabbitConfigurer {
 
     private void loadBindingConfigs() {
         log.info("Auto configuring binding...");
-        BindingElement sagaBindingElement = createBinding(sagaExchange.getName(), sagaQueue.getName(), SAGA_ROUTING_KEY, true);
+        BindingElement sagaBindingElement = createBinding(sagaExchange.getName(), sagaQueue.getName());
         Binding sagaBinding = sagaBindingElement.bind(sagaExchange, sagaQueue);
         rabbitAdmin.declareBinding(sagaBinding);
         log.info("Auto configuring binding: Routing Key = {} , Binding = {{}}", sagaBinding.getRoutingKey(), sagaBinding);
     }
 
     private static ExchangeElement createExchangeConfig(String name) {
-        return ExchangeElement.builder().name(name).type(ExchangeTypeEnum.TOPIC).autoDelete(true).durable(false).build();
+        return ExchangeElement.builder().name(name).type(ExchangeTypeEnum.HEADERS).build();
     }
 
     private static QueueElement createQueueConfig(String name, boolean postfix) {
         if (postfix) {
             name = appendApplicationNamePostfix(name);
         }
-        return QueueElement.builder().name(name).autoDelete(true).durable(false).deadLetterEnabled(true).build();
+        return QueueElement.builder().name(name).build();
     }
 
     private static BindingElement createBinding(String exchange, String queue, String routingKey, boolean postfix) {
@@ -90,12 +90,25 @@ public class RabbitConfigurer {
         return BindingElement.builder().exchange(exchange).queue(queue).routingKey(routingKey).build();
     }
 
+    private static BindingElement createBinding(String exchange, String queue) {
+        return BindingElement.builder().exchange(exchange).queue(queue)
+                .routingKey(SAGA_ROUTING_KEY)
+                .argument(SAGA_HEADER_NAME, ApplicationProperties.getApplicationName())
+                .argument(SAGA_HEADER_ALL_NAME, true)
+                .argument(X_MATCH_HEADER_NAME, "any")
+                .build();
+    }
+
     private static DeadLetterElement createValidDeadLetterConfig(String name) {
         return DeadLetterElement.builder().deadLetterExchange(ExchangeElement.builder().name(name).build()).build();
     }
 
     private static String appendApplicationNamePostfix(String value) {
         return value.concat("_").concat(ApplicationProperties.getApplicationName().toUpperCase(Locale.ENGLISH));
+    }
+
+    public static String getSagaQueue() {
+        return SAGA_QUEUE.concat("_").concat(ApplicationProperties.getApplicationName().toUpperCase(Locale.ENGLISH));
     }
 }
 

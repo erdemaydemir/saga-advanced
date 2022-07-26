@@ -1,17 +1,22 @@
 package com.forguta.libs.saga.core.model;
 
 import com.forguta.libs.saga.core.config.ApplicationProperties;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.util.StringUtils;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @SuperBuilder
-public abstract class Event<T> {
+public class Event<T> implements Serializable {
 
     private final String id = UUID.randomUUID().toString();
     private final String name = this.getClass().getSimpleName();

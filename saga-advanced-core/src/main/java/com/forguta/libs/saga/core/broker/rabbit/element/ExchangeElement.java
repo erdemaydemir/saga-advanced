@@ -17,9 +17,9 @@ public class ExchangeElement implements RabbitElement {
     @Builder.Default
     private ExchangeTypeEnum type = ExchangeTypeEnum.TOPIC;
     @Builder.Default
-    private Boolean durable = Boolean.FALSE;
+    private Boolean durable = Boolean.TRUE;
     @Builder.Default
-    private Boolean autoDelete = Boolean.TRUE;
+    private Boolean autoDelete = Boolean.FALSE;
     @Builder.Default
     private Boolean internal = Boolean.FALSE;
     @Builder.Default

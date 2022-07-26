@@ -19,7 +19,7 @@ public class QueueElement implements RabbitElement {
     @Builder.Default
     private Boolean durable = Boolean.FALSE;
     @Builder.Default
-    private Boolean autoDelete = Boolean.TRUE;
+    private Boolean autoDelete = Boolean.FALSE;
     @Builder.Default
     private Boolean exclusive = Boolean.FALSE;
     @Builder.Default

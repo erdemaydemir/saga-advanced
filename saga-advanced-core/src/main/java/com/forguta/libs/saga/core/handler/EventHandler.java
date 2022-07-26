@@ -3,12 +3,12 @@ package com.forguta.libs.saga.core.handler;
 import com.forguta.libs.saga.core.exception.EventProcessorNotFoundException;
 import com.forguta.libs.saga.core.exception.ProcessInternalException;
 import com.forguta.libs.saga.core.model.Event;
-import com.forguta.libs.saga.core.process.EventProcessorExecutor;
 import com.forguta.libs.saga.core.model.constant.Constant;
 import com.forguta.libs.saga.core.model.constant.EventActionTypeEnum;
-import lombok.AllArgsConstructor;
+import com.forguta.libs.saga.core.process.EventProcessorExecutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -24,10 +24,10 @@ public class EventHandler {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public <T extends Event<?>> T receive(T event) {
+    @RabbitListener(queues = "#{T(com.forguta.libs.saga.core.broker.rabbit.RabbitConfigurer).getSagaQueue()}")
+    public <T extends Event<?>> void receive(T event) {
         log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}, body = {}", event.getName(), EventActionTypeEnum.RECEIVED, event.getId(), event.getCorrelationId(), event.isAsync() ? "sync-mode = {}" : Constant.SYNC, event.getBody());
         applicationEventPublisher.publishEvent(event);
-        return event;
     }
 
     @EventListener(classes = Event.class, condition = "!#event.async")

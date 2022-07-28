@@ -4,7 +4,6 @@ import com.forguta.libs.saga.core.exception.EventProcessorNotFoundException;
 import com.forguta.libs.saga.core.exception.ProcessInternalException;
 import com.forguta.libs.saga.core.model.Event;
 import com.forguta.libs.saga.core.model.EventPayload;
-import com.forguta.libs.saga.core.model.IDto;
 import com.forguta.libs.saga.core.model.constant.Constant;
 import com.forguta.libs.saga.core.model.constant.EventActionTypeEnum;
 import com.forguta.libs.saga.core.process.EventProcessorExecutor;
@@ -16,6 +15,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutionException;
 
@@ -27,13 +27,13 @@ public class EventHandler {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @RabbitListener(queues = "#{T(com.forguta.libs.saga.core.broker.rabbit.RabbitConfigurer).getSagaQueue()}")
-    public <T extends EventPayload<? extends IDto>> void receive(Event<T> event) {
+    public <T extends EventPayload<? extends Serializable>> void receive(Event<T> event) {
         log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}", event.getName(), EventActionTypeEnum.RECEIVED, event.getId(), event.getCorrelationId(), event.isAsync() ? "sync-mode = {}" : Constant.SYNC);
         applicationEventPublisher.publishEvent(event);
     }
 
     @EventListener(classes = Event.class, condition = "!#event.async")
-    public <T extends EventPayload<? extends IDto>> void handleEvent(Event<T> event) {
+    public <T extends EventPayload<? extends Serializable>> void handleEvent(Event<T> event) {
         try {
             log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}", event.getName(), EventActionTypeEnum.HANDLED, event.getId(), event.getCorrelationId(), event.isAsync() ? "sync-mode = {}" : Constant.SYNC);
             event = EventProcessorExecutor.execute(event).get();
@@ -50,7 +50,7 @@ public class EventHandler {
 
     @Async
     @EventListener(classes = Event.class, condition = "#event.async")
-    public <T extends EventPayload<? extends IDto>> void asyncHandleEvent(Event<T> event) {
+    public <T extends EventPayload<? extends Serializable>> void asyncHandleEvent(Event<T> event) {
         try {
             log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}", event.getName(), EventActionTypeEnum.HANDLED, event.getId(), event.getCorrelationId(), event.isAsync() ? Constant.ASYNC : Constant.SYNC);
             EventProcessorExecutor.execute(event);

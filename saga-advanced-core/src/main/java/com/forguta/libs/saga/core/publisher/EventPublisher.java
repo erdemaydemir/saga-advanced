@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forguta.libs.saga.core.broker.rabbit.constant.RabbitConstant;
 import com.forguta.libs.saga.core.model.Event;
 import com.forguta.libs.saga.core.model.EventPayload;
-import com.forguta.libs.saga.core.model.IDto;
 import com.forguta.libs.saga.core.model.constant.Constant;
 import com.forguta.libs.saga.core.model.constant.EventActionTypeEnum;
 import com.forguta.libs.saga.core.util.EventMDCContext;
@@ -18,6 +17,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.io.Serializable;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -26,7 +27,7 @@ public class EventPublisher {
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private final RabbitTemplate rabbitTemplate;
 
-    public <T extends EventPayload<? extends IDto>> void sendAndForget(Event<T> event) {
+    public <T extends EventPayload<? extends Serializable>> void sendAndForget(Event<T> event) {
         if (StringUtils.hasText(EventMDCContext.getCorrelationId())) {
             event.setCorrelationId(EventMDCContext.getCorrelationId());
         }
@@ -44,7 +45,7 @@ public class EventPublisher {
         log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}", event.getName(), EventActionTypeEnum.SENT, event.getId(), event.getCorrelationId(), event.isAsync() ? Constant.ASYNC : Constant.SYNC);
     }
 
-    public <T extends EventPayload<? extends IDto>> void sendAndForget(Event<T> event, String serviceName) {
+    public <T extends EventPayload<? extends Serializable>> void sendAndForget(Event<T> event, String serviceName) {
         if (StringUtils.hasText(EventMDCContext.getCorrelationId())) {
             event.setCorrelationId(EventMDCContext.getCorrelationId());
         }

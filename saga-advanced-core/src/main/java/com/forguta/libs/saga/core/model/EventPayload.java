@@ -9,7 +9,7 @@ import java.io.Serializable;
 @SuperBuilder
 @Data
 @NoArgsConstructor
-public class EventPayload<D extends IDto> implements Serializable {
+public class EventPayload<D extends Serializable> implements Serializable {
 
     private D dto;
 }

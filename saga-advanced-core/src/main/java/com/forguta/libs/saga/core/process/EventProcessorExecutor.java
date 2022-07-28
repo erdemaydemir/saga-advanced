@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -49,7 +49,7 @@ public class EventProcessorExecutor {
         }
         try {
             EventMDCContext.put(event.getCorrelationId());
-            buildConsumer(beanMethodCombination).accept(getCastedEventBody(event, beanMethodCombination));
+            biConsumer.accept(getCastedEventPayload(event, beanMethodCombination.getKlass()), beanMethodCombination);
             EventMDCContext.clear();
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -58,22 +58,20 @@ public class EventProcessorExecutor {
         return CompletableFuture.completedFuture(event);
     }
 
-    private static <T extends EventPayload<? extends Serializable>> Object getCastedEventBody(Event<T> event, BeanMethodCombination beanMethodCombination) throws JsonProcessingException {
-        String eventBodyJsonStr = OBJECT_MAPPER.writeValueAsString(event.getBody());
-        return OBJECT_MAPPER.readValue(eventBodyJsonStr, beanMethodCombination.getKlass());
-    }
-
-    private static <T> Consumer<T> buildConsumer(BeanMethodCombination beanMethodCombination){
-        return eventBody -> {
-            try {
-                beanMethodCombination.getMethod().invoke(beanMethodCombination.getBean(), eventBody);
-            } catch (InvocationTargetException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        };
-    }
-
     public static void putProcessor(String processorName, BeanMethodCombination beanMethodCombination) {
         EventProcessorExecutor.processorMap.put(processorName, beanMethodCombination);
     }
+
+    private static <T extends EventPayload<? extends Serializable>> EventPayload<?> getCastedEventPayload(Event<T> event, Class<?> klass) throws JsonProcessingException {
+        String eventBodyJsonStr = OBJECT_MAPPER.writeValueAsString(event.getBody());
+        return (EventPayload<?>) OBJECT_MAPPER.readValue(eventBodyJsonStr, klass);
+    }
+
+    private final static BiConsumer<EventPayload<?>, BeanMethodCombination> biConsumer = (eventPayload, beanMethodCombination) -> {
+        try {
+            beanMethodCombination.getMethod().invoke(beanMethodCombination.getBean(), eventPayload);
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    };
 }

@@ -6,12 +6,13 @@ import com.forguta.libs.saga.core.exception.EventProcessorNotFoundException;
 import com.forguta.libs.saga.core.exception.ProcessInternalException;
 import com.forguta.libs.saga.core.exception.ProcessRequiredEventCastingException;
 import com.forguta.libs.saga.core.model.Event;
+import com.forguta.libs.saga.core.model.EventPayload;
+import com.forguta.libs.saga.core.model.IDto;
 import com.forguta.libs.saga.core.util.EventMDCContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class EventProcessorExecutor {
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    public static <T extends Serializable> CompletableFuture<Event<T>> execute(Event<T> event) throws EventProcessorNotFoundException, ProcessInternalException, InvocationTargetException, IllegalAccessException {
+    public static <T extends EventPayload<? extends IDto>> CompletableFuture<Event<T>> execute(Event<T> event) throws EventProcessorNotFoundException, ProcessInternalException, InvocationTargetException, IllegalAccessException {
         BeanMethodCombination beanMethodCombination = processorMap.get(event.getName());
         if (beanMethodCombination == null) {
             throw new EventProcessorNotFoundException("Event processor not found for " + event.getName());
@@ -57,7 +58,7 @@ public class EventProcessorExecutor {
         return CompletableFuture.completedFuture(event);
     }
 
-    private static <T extends Serializable> Object getCastedEventBody(Event<T> event, BeanMethodCombination beanMethodCombination) throws JsonProcessingException {
+    private static <T extends EventPayload<? extends IDto>> Object getCastedEventBody(Event<T> event, BeanMethodCombination beanMethodCombination) throws JsonProcessingException {
         String eventBodyJsonStr = OBJECT_MAPPER.writeValueAsString(event.getBody());
         return OBJECT_MAPPER.readValue(eventBodyJsonStr, beanMethodCombination.getKlass());
     }

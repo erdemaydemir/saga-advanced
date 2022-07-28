@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Data
 @Builder
-public class Event<T extends Serializable> implements Serializable {
+public class Event<T extends EventPayload<? extends IDto>> implements Serializable {
 
     @Builder.Default
     private final String id = UUID.randomUUID().toString();
@@ -46,11 +46,11 @@ public class Event<T extends Serializable> implements Serializable {
         this.failedMessage = StringUtils.hasText(exception.getMessage()) ? exception.getClass().getSimpleName().concat(" - ").concat(exception.getMessage()) : exception.getClass().getSimpleName();
     }
 
-    public static <T extends Serializable> EventBuilder<T> builder() {
+    public static <T extends EventPayload<? extends IDto>> EventBuilder<T> builder() {
         return new CustomEventBuilder<>();
     }
 
-    private static class CustomEventBuilder<T extends Serializable> extends EventBuilder<T> {
+    private static class CustomEventBuilder<T extends EventPayload<? extends IDto>> extends EventBuilder<T> {
         @Override
         public Event<T> build() {
             super.name(super.body.getClass().getSimpleName());

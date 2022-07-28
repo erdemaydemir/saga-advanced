@@ -1,14 +1,14 @@
 package com.forguta.libs.saga.auto;
 
-import lombok.*;
-
-import java.io.Serializable;
+import com.forguta.libs.saga.core.model.EventPayload;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
-public class SampleCreateEvent implements Serializable {
-
-    private SampleDto sampleDto;
+@EqualsAndHashCode(callSuper = true)
+public class SampleCreateEvent extends EventPayload<SampleDto> {
 }

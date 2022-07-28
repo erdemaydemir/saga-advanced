@@ -14,6 +14,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutionException;
 
@@ -25,13 +26,13 @@ public class EventHandler {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @RabbitListener(queues = "#{T(com.forguta.libs.saga.core.broker.rabbit.RabbitConfigurer).getSagaQueue()}")
-    public <T extends Event<?>> void receive(T event) {
+    public <T extends Serializable> void receive(Event<T> event) {
         log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}, body = {}", event.getName(), EventActionTypeEnum.RECEIVED, event.getId(), event.getCorrelationId(), event.isAsync() ? "sync-mode = {}" : Constant.SYNC, event.getBody());
         applicationEventPublisher.publishEvent(event);
     }
 
     @EventListener(classes = Event.class, condition = "!#event.async")
-    public <T extends Event<?>> void handleEvent(T event) {
+    public <T extends Serializable> void handleEvent(Event<T> event) {
         try {
             log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}, body = {}", event.getName(), EventActionTypeEnum.HANDLED, event.getId(), event.getCorrelationId(), event.isAsync() ? "sync-mode = {}" : Constant.SYNC, event.getBody());
             event = EventProcessorExecutor.execute(event).get();
@@ -48,7 +49,7 @@ public class EventHandler {
 
     @Async
     @EventListener(classes = Event.class, condition = "#event.async")
-    public <T extends Event<?>> void asyncHandleEvent(T event) {
+    public <T extends Serializable> void asyncHandleEvent(Event<T> event) {
         try {
             log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}, body = {}", event.getName(), EventActionTypeEnum.HANDLED, event.getId(), event.getCorrelationId(), event.isAsync() ? Constant.ASYNC : Constant.SYNC, event.getBody());
             EventProcessorExecutor.execute(event);

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
@@ -15,17 +14,18 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@SuperBuilder
-public class Event<T> implements Serializable {
+@Builder
+public class Event<T extends Serializable> implements Serializable {
 
+    @Builder.Default
     private final String id = UUID.randomUUID().toString();
-    private final String name = this.getClass().getSimpleName();
+    @Builder.Default
     private final long timestamp = Instant.now().toEpochMilli();
-
     @Builder.Default
     private String correlationId = UUID.randomUUID().toString();
 
     private boolean async;
+    private String name;
     private T body;
 
     private String processedBy;
@@ -43,7 +43,18 @@ public class Event<T> implements Serializable {
         this.processedBy = ApplicationProperties.getApplicationName();
         this.processed = true;
         this.success = false;
-        this.failedMessage = StringUtils.hasText(exception.getMessage()) ? exception.getClass().getSimpleName()
-                .concat(" - ").concat(exception.getMessage()) : exception.getClass().getSimpleName();
+        this.failedMessage = StringUtils.hasText(exception.getMessage()) ? exception.getClass().getSimpleName().concat(" - ").concat(exception.getMessage()) : exception.getClass().getSimpleName();
+    }
+
+    public static <T extends Serializable> EventBuilder<T> builder() {
+        return new CustomEventBuilder<>();
+    }
+
+    private static class CustomEventBuilder<T extends Serializable> extends EventBuilder<T> {
+        @Override
+        public Event<T> build() {
+            super.name(super.body.getClass().getSimpleName());
+            return super.build();
+        }
     }
 }

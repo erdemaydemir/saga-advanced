@@ -16,6 +16,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.io.Serializable;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -24,7 +26,7 @@ public class EventPublisher {
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private final RabbitTemplate rabbitTemplate;
 
-    public <T extends Event<?>> void sendAndForget(T event) {
+    public <T extends Serializable> void sendAndForget(Event<T> event) {
         if (StringUtils.hasText(EventMDCContext.getCorrelationId())) {
             event.setCorrelationId(EventMDCContext.getCorrelationId());
         }
@@ -42,7 +44,7 @@ public class EventPublisher {
         log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}, body = {}", event.getName(), EventActionTypeEnum.SENT, event.getId(), event.getCorrelationId(), event.isAsync() ? Constant.ASYNC : Constant.SYNC, event.getBody());
     }
 
-    public <T extends Event<?>> void sendAndForget(T event, String serviceName) {
+    public <T extends Serializable> void sendAndForget(Event<T> event, String serviceName) {
         if (StringUtils.hasText(EventMDCContext.getCorrelationId())) {
             event.setCorrelationId(EventMDCContext.getCorrelationId());
         }

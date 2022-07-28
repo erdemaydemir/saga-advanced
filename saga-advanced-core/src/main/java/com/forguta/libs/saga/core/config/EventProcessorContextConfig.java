@@ -1,9 +1,9 @@
 package com.forguta.libs.saga.core.config;
 
 import com.forguta.libs.saga.core.exception.NoSuchProcessorDefinitionException;
+import com.forguta.libs.saga.core.process.BeanMethodCombination;
 import com.forguta.libs.saga.core.process.EventProcessorExecutor;
 import com.forguta.libs.saga.core.process.annotation.Processor;
-import com.forguta.libs.saga.core.util.Pair;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
@@ -37,13 +37,14 @@ public class EventProcessorContextConfig {
     private void loadProcessorMap() {
         final Map<String, Object> beans = applicationContext.getBeansWithAnnotation(Component.class);
         if (beans.size() > 0) {
-            beans.forEach((s, o) -> {
-                Class<?> klass = o.getClass();
+            beans.forEach((s, bean) -> {
+                Class<?> klass = bean.getClass();
                 while (klass != Object.class) {
                     for (final Method method : klass.getDeclaredMethods()) {
                         if (method.isAnnotationPresent(Processor.class)) {
                             Processor annotInstance = method.getAnnotation(Processor.class);
-                            EventProcessorExecutor.putProcessor(annotInstance.value().getSimpleName(), Pair.of(o, method));
+                            EventProcessorExecutor.putProcessor(annotInstance.value().getSimpleName(), BeanMethodCombination.builder()
+                                    .bean(bean).method(method).klass(annotInstance.value()).build());
                         }
                     }
                     klass = klass.getSuperclass();

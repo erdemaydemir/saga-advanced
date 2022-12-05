@@ -28,8 +28,9 @@ public class EventPublisher {
     private final RabbitTemplate rabbitTemplate;
 
     public <T extends EventPayload<? extends Serializable>> void sendAndForget(Event<T> event) {
-        if (StringUtils.hasText(EventMDCContext.getCorrelationId())) {
-            event.setCorrelationId(EventMDCContext.getCorrelationId());
+        String correlationId = EventMDCContext.getCorrelationId();
+        if (StringUtils.hasText(correlationId)) {
+            event.setCorrelationId(correlationId);
         }
         try {
             String orderJson = OBJECT_MAPPER.writeValueAsString(event);
@@ -46,8 +47,9 @@ public class EventPublisher {
     }
 
     public <T extends EventPayload<? extends Serializable>> void sendAndForget(Event<T> event, String serviceName) {
-        if (StringUtils.hasText(EventMDCContext.getCorrelationId())) {
-            event.setCorrelationId(EventMDCContext.getCorrelationId());
+        String correlationId = EventMDCContext.getCorrelationId();
+        if (StringUtils.hasText(correlationId)) {
+            event.setCorrelationId(correlationId);
         }
         try {
             String orderJson = OBJECT_MAPPER.writeValueAsString(event);

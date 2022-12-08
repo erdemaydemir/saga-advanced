@@ -2,12 +2,14 @@ package com.forguta.libs.saga.core.process;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.forguta.commons.constant.LogSummonerEnum;
+import com.forguta.commons.constant.LogSummonerPhaseEnum;
+import com.forguta.commons.util.MDCContext;
 import com.forguta.libs.saga.core.exception.EventProcessorNotFoundException;
 import com.forguta.libs.saga.core.exception.ProcessInternalException;
 import com.forguta.libs.saga.core.exception.ProcessRequiredEventCastingException;
 import com.forguta.libs.saga.core.model.Event;
 import com.forguta.libs.saga.core.model.EventPayload;
-import com.forguta.libs.saga.core.util.EventMDCContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -48,11 +50,12 @@ public class EventProcessorExecutor {
             throw new EventProcessorNotFoundException("Event processor not found for " + event.getName());
         }
         try {
-            EventMDCContext.put(event.getCorrelationId());
+            MDCContext.putCorrelationId(event.getCorrelationId());
+            log.info("TYPE={}, PHASE={}, EVENT_NAME={}, EVENT_ID={}", LogSummonerEnum.EVENT, LogSummonerPhaseEnum.PRE_HANDLE, event.getName(), event.getId());
             biConsumer.accept(getCastedEventPayload(event, beanMethodCombination.getKlass()), beanMethodCombination);
-            EventMDCContext.clear();
+            log.info("TYPE={}, PHASE={}, EVENT_NAME={}, EVENT_ID={}", LogSummonerEnum.EVENT, LogSummonerPhaseEnum.POST_HANDLE, event.getName(), event.getId());
+            MDCContext.clear();
         } catch (Exception exception) {
-            exception.printStackTrace();
             throw new ProcessRequiredEventCastingException("Process method cannot be cast required event object.");
         }
         return CompletableFuture.completedFuture(event);

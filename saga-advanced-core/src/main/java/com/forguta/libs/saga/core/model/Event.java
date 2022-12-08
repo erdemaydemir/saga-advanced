@@ -1,7 +1,7 @@
 package com.forguta.libs.saga.core.model;
 
+import com.forguta.commons.util.MDCContext;
 import com.forguta.libs.saga.core.config.ApplicationProperties;
-import com.forguta.libs.saga.core.util.EventMDCContext;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +23,7 @@ public class Event<T extends EventPayload<? extends Serializable>> implements Se
     @Builder.Default
     private final long timestamp = Instant.now().toEpochMilli();
     @Builder.Default
-    private String correlationId = EventMDCContext.getCorrelationId() != null ? EventMDCContext.getCorrelationId() : UUID.randomUUID().toString();
+    private String correlationId = MDCContext.getCorrelationId() != null ? MDCContext.getCorrelationId() : UUID.randomUUID().toString();
 
     private boolean async;
     private String name;

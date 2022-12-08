@@ -4,8 +4,6 @@ import com.forguta.libs.saga.core.exception.EventProcessorNotFoundException;
 import com.forguta.libs.saga.core.exception.ProcessInternalException;
 import com.forguta.libs.saga.core.model.Event;
 import com.forguta.libs.saga.core.model.EventPayload;
-import com.forguta.libs.saga.core.model.constant.Constant;
-import com.forguta.libs.saga.core.model.constant.EventActionTypeEnum;
 import com.forguta.libs.saga.core.process.EventProcessorExecutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,23 +26,19 @@ public class EventHandler {
 
     @RabbitListener(queues = "#{T(com.forguta.libs.saga.core.broker.rabbit.RabbitConfigurer).getSagaQueue()}")
     public <T extends EventPayload<? extends Serializable>> void receive(Event<T> event) {
-        log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}", event.getName(), EventActionTypeEnum.RECEIVED, event.getId(), event.getCorrelationId(), event.isAsync() ? "sync-mode = {}" : Constant.SYNC);
         applicationEventPublisher.publishEvent(event);
     }
 
     @EventListener(classes = Event.class, condition = "!#event.async")
     public <T extends EventPayload<? extends Serializable>> void handleEvent(Event<T> event) {
         try {
-            log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}", event.getName(), EventActionTypeEnum.HANDLED, event.getId(), event.getCorrelationId(), event.isAsync() ? "sync-mode = {}" : Constant.SYNC);
             event = EventProcessorExecutor.execute(event).get();
             event.successedProcessed();
-            log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}", event.getName(), EventActionTypeEnum.SUCCESSED, event.getId(), event.getCorrelationId(), event.isAsync() ? "sync-mode = {}" : Constant.SYNC);
         } catch (ProcessInternalException | InterruptedException | ExecutionException | InvocationTargetException |
                  IllegalAccessException exception) {
             event.failedProcessed(exception);
-            log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}, failure message = {}", event.getName(), EventActionTypeEnum.FAILED, event.getId(), event.getCorrelationId(), event.isAsync() ? Constant.ASYNC : Constant.SYNC, event.getFailedMessage());
         } catch (EventProcessorNotFoundException exception) {
-            log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}, failure message = {}", event.getName(), EventActionTypeEnum.IDLE, event.getId(), event.getCorrelationId(), event.isAsync() ? Constant.ASYNC : Constant.SYNC, event.getFailedMessage());
+            doNoting();
         }
     }
 
@@ -52,15 +46,15 @@ public class EventHandler {
     @EventListener(classes = Event.class, condition = "#event.async")
     public <T extends EventPayload<? extends Serializable>> void asyncHandleEvent(Event<T> event) {
         try {
-            log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}", event.getName(), EventActionTypeEnum.HANDLED, event.getId(), event.getCorrelationId(), event.isAsync() ? Constant.ASYNC : Constant.SYNC);
             EventProcessorExecutor.execute(event);
             event.successedProcessed();
-            log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}", event.getName(), EventActionTypeEnum.SUCCESSED, event.getId(), event.getCorrelationId(), event.isAsync() ? Constant.ASYNC : Constant.SYNC);
         } catch (ProcessInternalException | InvocationTargetException | IllegalAccessException exception) {
             event.failedProcessed(exception);
-            log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}, failure message = {}", event.getName(), EventActionTypeEnum.FAILED, event.getId(), event.getCorrelationId(), event.isAsync() ? Constant.ASYNC : Constant.SYNC, event.getFailedMessage());
         } catch (EventProcessorNotFoundException exception) {
-            log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}, failure message = {}", event.getName(), EventActionTypeEnum.IDLE, event.getId(), event.getCorrelationId(), event.isAsync() ? Constant.ASYNC : Constant.SYNC, event.getFailedMessage());
+            doNoting();
         }
+    }
+
+    private void doNoting() {
     }
 }

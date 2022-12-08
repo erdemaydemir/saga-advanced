@@ -2,12 +2,10 @@ package com.forguta.libs.saga.core.publisher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.forguta.commons.util.MDCContext;
 import com.forguta.libs.saga.core.broker.rabbit.constant.RabbitConstant;
 import com.forguta.libs.saga.core.model.Event;
 import com.forguta.libs.saga.core.model.EventPayload;
-import com.forguta.libs.saga.core.model.constant.Constant;
-import com.forguta.libs.saga.core.model.constant.EventActionTypeEnum;
-import com.forguta.libs.saga.core.util.EventMDCContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
@@ -28,7 +26,7 @@ public class EventPublisher {
     private final RabbitTemplate rabbitTemplate;
 
     public <T extends EventPayload<? extends Serializable>> void sendAndForget(Event<T> event) {
-        String correlationId = EventMDCContext.getCorrelationId();
+        String correlationId = MDCContext.getCorrelationId();
         if (StringUtils.hasText(correlationId)) {
             event.setCorrelationId(correlationId);
         }
@@ -41,13 +39,12 @@ public class EventPublisher {
                     .build();
             rabbitTemplate.convertAndSend(RabbitConstant.SAGA_EXCHANGE, RabbitConstant.SAGA_ROUTING_KEY, message);
         } catch (JsonProcessingException e) {
-            log.error("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}", event.getName(), EventActionTypeEnum.NOT_SENT, event.getId(), event.getCorrelationId(), event.isAsync() ? Constant.ASYNC : Constant.SYNC);
+            log.error(e.getMessage(), e);
         }
-        log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}", event.getName(), EventActionTypeEnum.SENT, event.getId(), event.getCorrelationId(), event.isAsync() ? Constant.ASYNC : Constant.SYNC);
     }
 
     public <T extends EventPayload<? extends Serializable>> void sendAndForget(Event<T> event, String serviceName) {
-        String correlationId = EventMDCContext.getCorrelationId();
+        String correlationId = MDCContext.getCorrelationId();
         if (StringUtils.hasText(correlationId)) {
             event.setCorrelationId(correlationId);
         }
@@ -60,8 +57,7 @@ public class EventPublisher {
                     .build();
             rabbitTemplate.convertAndSend(RabbitConstant.SAGA_EXCHANGE, RabbitConstant.SAGA_ROUTING_KEY, message);
         } catch (JsonProcessingException e) {
-            log.error("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}", event.getName(), EventActionTypeEnum.NOT_SENT, event.getId(), event.getCorrelationId(), event.isAsync() ? Constant.ASYNC : Constant.SYNC);
+            log.error(e.getMessage(), e);
         }
-        log.info("[{}] EVENT [{}] -> id = {}, correlation-id = {}, sync-mode = {}", event.getName(), EventActionTypeEnum.SENT, event.getId(), event.getCorrelationId(), event.isAsync() ? Constant.ASYNC : Constant.SYNC);
     }
 }

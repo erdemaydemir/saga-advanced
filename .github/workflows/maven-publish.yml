@@ -10,7 +10,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 11
@@ -20,13 +19,10 @@ jobs:
         distribution: 'temurin'
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
-        server-username: GITHUB_USER_REF # env variable name for username
-        server-password: GITHUB_TOKEN_REF # env variable name for GitHub Personal Access Token
     - name: Build with Maven
       run: mvn -B package --file pom.xml
       env:
-        GITHUB_USER_REF: ${{ secrets.GH_PACKAGE_REPO_USERNAME }}
-        GITHUB_TOKEN_REF: ${{ secrets.GH_PACKAGE_REPO_PASSWORD }}
+        GITHUB_TOKEN: ${{ github.token }}
     - name: Publish to GitHub Packages Apache Maven
       run: mvn --batch-mode -DuseGitHubPackages=true deploy -s $GITHUB_WORKSPACE/settings.xml
       env:

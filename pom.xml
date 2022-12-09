@@ -10,9 +10,9 @@
         <version>2.7.1</version>
     </parent>
 
-    <groupId>com.github.forguta</groupId>
+    <groupId>com.github.forguta.libs.saga</groupId>
     <artifactId>saga-advanced-parent</artifactId>
-    <version>1.1.4</version>
+    <version>1.1.5</version>
     <packaging>pom</packaging>
 
     <name>saga-advanced-parent</name>

@@ -3,18 +3,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.forguta.libs.saga</groupId>
-    <artifactId>saga-advanced-core</artifactId>
-    <version>1.1.5</version>
+    <groupId>com.github.forguta.saga-advanced</groupId>
+    <artifactId>core</artifactId>
+    <version>1.1.7</version>
     <packaging>jar</packaging>
 
-    <name>saga-advanced-core</name>
+    <name>core</name>
     <description>A generic library for communicating with events with extension on spring boot amqp</description>
 
     <parent>
-        <groupId>com.github.forguta.libs.saga</groupId>
-        <artifactId>saga-advanced-parent</artifactId>
-        <version>1.1.5</version>
+        <groupId>com.github.forguta.saga-advanced</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.1.7</version>
     </parent>
 
     <properties>

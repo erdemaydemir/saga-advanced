@@ -10,12 +10,12 @@
         <version>2.7.1</version>
     </parent>
 
-    <groupId>com.github.forguta.libs.saga</groupId>
-    <artifactId>saga-advanced-parent</artifactId>
-    <version>1.1.5</version>
+    <groupId>com.github.forguta.saga-advanced</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.1.7</version>
     <packaging>pom</packaging>
 
-    <name>saga-advanced-parent</name>
+    <name>parent</name>
     <description>A generic library for communicating with events with extension on spring boot amqp</description>
 
     <properties>
@@ -26,9 +26,9 @@
     </properties>
 
     <modules>
-        <module>saga-advanced-core</module>
-        <module>saga-advanced-spring-boot-autoconfigure</module>
-        <module>saga-advanced-spring-boot-starter</module>
+        <module>core</module>
+        <module>spring-boot-autoconfigure</module>
+        <module>spring-boot-starter</module>
     </modules>
 
     <dependencies>

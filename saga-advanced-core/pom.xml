@@ -54,7 +54,7 @@
 
     <repositories>
         <repository>
-            <id>github_forguta_commons</id>
+            <id>github</id>
             <name>github_forguta_commons</name>
             <url>https://maven.pkg.github.com/forguta/commons</url>
             <snapshots>

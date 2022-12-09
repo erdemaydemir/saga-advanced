@@ -21,7 +21,7 @@
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <commons.version>1.0.1</commons.version>
+        <commons.version>1.0.2</commons.version>
     </properties>
 
     <dependencies>
@@ -52,4 +52,14 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>github_forguta_commons</id>
+            <name>github_forguta_commons</name>
+            <url>https://maven.pkg.github.com/forguta/commons</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 </project>

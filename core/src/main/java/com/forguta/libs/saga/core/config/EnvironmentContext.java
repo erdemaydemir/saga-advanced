@@ -1,25 +1,17 @@
 package com.forguta.libs.saga.core.config;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-
-import javax.annotation.PostConstruct;
 
 import static com.forguta.commons.constant.ApplicationConstant.APPLICATION_NAME_KEY;
 
 @Slf4j
-@AllArgsConstructor
-@Configuration
-public class ApplicationProperties {
+public class EnvironmentContext {
 
-    private final ApplicationContext applicationContext;
     private static Environment environment;
 
-    @PostConstruct
-    public void init() {
+    public EnvironmentContext(ApplicationContext applicationContext) {
         setEnvironment(applicationContext.getEnvironment());
     }
 
@@ -32,6 +24,6 @@ public class ApplicationProperties {
     }
 
     public static void setEnvironment(Environment environment) {
-        ApplicationProperties.environment = environment;
+        EnvironmentContext.environment = environment;
     }
 }

@@ -1,7 +1,7 @@
 package com.forguta.libs.saga.core.model;
 
 import com.forguta.commons.util.MDCContext;
-import com.forguta.libs.saga.core.config.ApplicationProperties;
+import com.forguta.libs.saga.core.config.EnvironmentContext;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,13 +35,13 @@ public class Event<T extends EventPayload<? extends Serializable>> implements Se
     private String failedMessage;
 
     public void successedProcessed() {
-        this.processedBy = ApplicationProperties.getApplicationName();
+        this.processedBy = EnvironmentContext.getApplicationName();
         this.processed = true;
         this.success = true;
     }
 
     public void failedProcessed(Exception exception) {
-        this.processedBy = ApplicationProperties.getApplicationName();
+        this.processedBy = EnvironmentContext.getApplicationName();
         this.processed = true;
         this.success = false;
         this.failedMessage = StringUtils.hasText(exception.getMessage()) ? exception.getClass().getSimpleName().concat(" - ").concat(exception.getMessage()) : exception.getClass().getSimpleName();

@@ -35,13 +35,18 @@ public class SagaAdvancedConfigurer {
     }
 
     @Bean
-    @DependsOn("applicationProperties")
+    public EnvironmentContext environmentContext() {
+        return new EnvironmentContext(applicationContext);
+    }
+
+    @Bean
+    @DependsOn("environmentContext")
     public SagaMessageBrokerConfiguration sagaMessageBrokerConfiguration() {
         return new RabbitConfiguration(rabbitTemplate);
     }
 
     @Bean
-    @DependsOn("applicationProperties")
+    @DependsOn("environmentContext")
     public EventProcessorContextConfig eventProcessorContextConfig() {
         return new EventProcessorContextConfig(applicationContext);
     }

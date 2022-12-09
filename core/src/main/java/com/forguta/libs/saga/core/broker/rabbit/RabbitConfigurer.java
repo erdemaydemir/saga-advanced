@@ -1,7 +1,7 @@
 package com.forguta.libs.saga.core.broker.rabbit;
 
 import com.forguta.libs.saga.core.broker.rabbit.element.*;
-import com.forguta.libs.saga.core.config.ApplicationProperties;
+import com.forguta.libs.saga.core.config.EnvironmentContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
@@ -93,7 +93,7 @@ public class RabbitConfigurer {
     private static BindingElement createBinding(String exchange, String queue) {
         return BindingElement.builder().exchange(exchange).queue(queue)
                 .routingKey(SAGA_ROUTING_KEY)
-                .argument(SAGA_HEADER_NAME, ApplicationProperties.getApplicationName())
+                .argument(SAGA_HEADER_NAME, EnvironmentContext.getApplicationName())
                 .argument(SAGA_HEADER_ALL_NAME, true)
                 .argument(X_MATCH_HEADER_NAME, "any")
                 .build();
@@ -104,11 +104,11 @@ public class RabbitConfigurer {
     }
 
     private static String appendApplicationNamePostfix(String value) {
-        return value.concat("_").concat(ApplicationProperties.getApplicationName().toUpperCase(Locale.ENGLISH));
+        return value.concat("_").concat(EnvironmentContext.getApplicationName().toUpperCase(Locale.ENGLISH));
     }
 
     public static String getSagaQueue() {
-        return SAGA_QUEUE.concat("_").concat(ApplicationProperties.getApplicationName().toUpperCase(Locale.ENGLISH));
+        return SAGA_QUEUE.concat("_").concat(EnvironmentContext.getApplicationName().toUpperCase(Locale.ENGLISH));
     }
 }
 

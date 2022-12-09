@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.forguta</groupId>
+    <groupId>com.github.forguta</groupId>
     <artifactId>saga-advanced-spring-boot-starter</artifactId>
     <version>1.1.4</version>
     <packaging>jar</packaging>
@@ -12,7 +12,7 @@
     <description>A generic library for communicating with events with extension on spring boot amqp</description>
 
     <parent>
-        <groupId>com.forguta</groupId>
+        <groupId>com.github.forguta</groupId>
         <artifactId>saga-advanced-parent</artifactId>
         <version>1.1.4</version>
     </parent>
@@ -25,7 +25,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.forguta</groupId>
+            <groupId>com.github.forguta</groupId>
             <artifactId>saga-advanced-spring-boot-autoconfigure</artifactId>
             <version>${project.parent.version}</version>
         </dependency>

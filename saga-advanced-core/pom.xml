@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.forguta</groupId>
+    <groupId>com.github.forguta</groupId>
     <artifactId>saga-advanced-core</artifactId>
     <version>1.1.4</version>
     <packaging>jar</packaging>
@@ -12,7 +12,7 @@
     <description>A generic library for communicating with events with extension on spring boot amqp</description>
 
     <parent>
-        <groupId>com.forguta</groupId>
+        <groupId>com.github.forguta</groupId>
         <artifactId>saga-advanced-parent</artifactId>
         <version>1.1.4</version>
     </parent>
@@ -21,19 +21,12 @@
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <commons.version>1.0.4</commons.version>
+        <commons.version>1.0.5</commons.version>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>com.forguta</groupId>
+            <groupId>com.github.forguta</groupId>
             <artifactId>commons</artifactId>
             <version>${commons.version}</version>
         </dependency>

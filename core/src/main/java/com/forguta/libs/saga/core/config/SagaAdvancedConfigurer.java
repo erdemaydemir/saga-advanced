@@ -15,7 +15,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.concurrent.Executor;
 
 @RequiredArgsConstructor
-@ComponentScan(basePackages = "com.forguta.libs.saga")
+@ComponentScan(basePackages = {"com.forguta.libs.saga", "com.forguta.commons"})
 @Configuration
 public class SagaAdvancedConfigurer {
 
@@ -32,11 +32,6 @@ public class SagaAdvancedConfigurer {
         executor.setThreadNamePrefix("Event-Async");
         executor.initialize();
         return executor;
-    }
-
-    @Bean
-    public EnvironmentContext environmentContext() {
-        return new EnvironmentContext(applicationContext);
     }
 
     @Bean

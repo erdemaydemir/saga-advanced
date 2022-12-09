@@ -1,7 +1,7 @@
 package com.forguta.libs.saga.core.model;
 
+import com.forguta.commons.context.EnvironmentContext;
 import com.forguta.commons.util.MDCContext;
-import com.forguta.libs.saga.core.config.EnvironmentContext;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

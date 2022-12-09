@@ -1,7 +1,7 @@
 package com.forguta.libs.saga.core.broker.rabbit;
 
+import com.forguta.commons.context.EnvironmentContext;
 import com.forguta.libs.saga.core.broker.rabbit.element.*;
-import com.forguta.libs.saga.core.config.EnvironmentContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;

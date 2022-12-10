@@ -1,8 +1,8 @@
 package com.forguta.libs.saga.core.publisher;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forguta.commons.util.MDCContext;
+import com.forguta.commons.util.MyObjectMapper;
 import com.forguta.libs.saga.core.broker.rabbit.constant.RabbitConstant;
 import com.forguta.libs.saga.core.model.Event;
 import com.forguta.libs.saga.core.model.EventPayload;
@@ -22,7 +22,7 @@ import java.io.Serializable;
 @Component
 public class EventPublisher {
 
-    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private final MyObjectMapper OBJECT_MAPPER;
     private final RabbitTemplate rabbitTemplate;
 
     public <T extends EventPayload<? extends Serializable>> void sendAndForget(Event<T> event) {

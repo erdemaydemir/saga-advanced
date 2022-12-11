@@ -5,7 +5,7 @@
 
     <groupId>com.github.forguta.saga-advanced</groupId>
     <artifactId>core</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
     <packaging>jar</packaging>
 
     <name>core</name>
@@ -14,14 +14,14 @@
     <parent>
         <groupId>com.github.forguta.saga-advanced</groupId>
         <artifactId>parent</artifactId>
-        <version>1.2.1</version>
+        <version>1.2.2</version>
     </parent>
 
     <properties>
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <commons.version>1.0.7</commons.version>
+        <commons.version>1.0.8</commons.version>
     </properties>
 
     <dependencies>
